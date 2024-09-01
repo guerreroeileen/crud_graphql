@@ -1,0 +1,21 @@
+type CategoryDto {
+    id: ID!
+    name: String!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    price: Float!
+}
+
+type Query {
+    getCategory(id: ID!): CategoryDto
+    getAllCategories: [CategoryDto!]
+}
+
+type Mutation {
+    createCategory(name: String!): CategoryDto
+    updateCategory(id: ID!, name: String!): CategoryDto
+    deleteCategory(id: ID!): Boolean
+}
