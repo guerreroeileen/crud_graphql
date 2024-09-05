@@ -1,21 +1,19 @@
-type CategoryDto {
-    id: ID!
-    name: String!
-}
-
-type Product {
-    id: ID!
-    name: String!
-    price: Float!
-}
-
 type Query {
-    getCategory(id: ID!): CategoryDto
-    getAllCategories: [CategoryDto!]
+    categories(name: String, page: Int, size: Int): [CategoryResponse]
+    category(id: ID!): CategoryResponse
 }
 
 type Mutation {
-    createCategory(name: String!): CategoryDto
-    updateCategory(id: ID!, name: String!): CategoryDto
+    createCategory(input: CategoryInput!): CategoryResponse
+    updateCategory(id: ID!, input: CategoryInput!): CategoryResponse
     deleteCategory(id: ID!): Boolean
+}
+
+input CategoryInput {
+    name: String!
+}
+
+type CategoryResponse {
+    id: ID!
+    name: String!
 }

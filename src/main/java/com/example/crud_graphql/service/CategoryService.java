@@ -1,6 +1,7 @@
 package com.example.crud_graphql.service;
 
-import com.example.crud_graphql.dto.CategoryDto;
+import com.example.crud_graphql.resolver.input.CategoryInput;
+import com.example.crud_graphql.resolver.response.CategoryResponse;
 import com.example.crud_graphql.exceptions.ResourceNotFoundException;
 import com.example.crud_graphql.model.Category;
 import com.example.crud_graphql.repository.CategoryRepository;
@@ -22,7 +23,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
-    public List<CategoryDto> getAllCategories(String name, Integer page, Integer size) {
+    public List<CategoryResponse> getAllCategories(String name, Integer page, Integer size) {
+        System.out.println("aqui llegue");
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categoryPage;
         if (name != null && !name.isEmpty()) {
@@ -35,21 +37,21 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public CategoryDto getCategoryById(UUID id) {
+    public CategoryResponse getCategoryById(UUID id) {
         return categoryRepository.findById(id)
                 .map(this::apply)
                 .orElseThrow(() -> new ResourceNotFoundException(Category.class.getName(), id));
     }
 
-    public CategoryDto createCategory(CategoryDto categoryDTO) {
-        Category category = modelMapper.map(categoryDTO, Category.class);
+    public CategoryResponse createCategory(CategoryInput categoryInput) {
+        Category category = modelMapper.map(categoryInput, Category.class);
         return this.apply(categoryRepository.save(category));
     }
 
-    public CategoryDto updateCategory(UUID id, CategoryDto categoryDTO) {
+    public CategoryResponse updateCategory(UUID id, CategoryInput categoryInput) {
         return categoryRepository.findById(id)
                 .map(existingCategory -> {
-                    Category category = modelMapper.map(categoryDTO, Category.class);
+                    Category category = modelMapper.map(categoryInput, Category.class);
                     category.setId(existingCategory.getId());
                     return this.apply(categoryRepository.save(category));
                 })
@@ -60,7 +62,7 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    private CategoryDto apply(Category category) {
-        return modelMapper.map(category, CategoryDto.class);
+    private CategoryResponse apply(Category category) {
+        return modelMapper.map(category, CategoryResponse.class);
     }
 }

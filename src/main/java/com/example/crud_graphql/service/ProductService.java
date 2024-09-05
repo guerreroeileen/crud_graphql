@@ -1,7 +1,7 @@
 package com.example.crud_graphql.service;
 
 
-import com.example.crud_graphql.dto.ProductDto;
+import com.example.crud_graphql.resolver.response.ProductResponse;
 import com.example.crud_graphql.exceptions.ResourceNotFoundException;
 import com.example.crud_graphql.model.Product;
 import com.example.crud_graphql.repository.ProductRepository;
@@ -22,33 +22,33 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
-    public Page<ProductDto> getAllProducts(Integer page, Integer size, String productName, UUID categoryId, String sortDirection) {
+    public Page<ProductResponse> getAllProducts(Integer page, Integer size, String productName, UUID categoryId, String sortDirection) {
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
         Sort sort = Sort.by(direction, "price");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Product> productsPage = productRepository.findByNameAndCategoryId(productName, categoryId, pageable);
 
-        return productsPage.map(product-> this.modelMapper.map(product, ProductDto.class));
+        return productsPage.map(product-> this.modelMapper.map(product, ProductResponse.class));
     }
 
-    public ProductDto getProductById(UUID id) {
+    public ProductResponse getProductById(UUID id) {
         return productRepository.findById(id)
-                .map(product -> this.modelMapper.map(product, ProductDto.class))
+                .map(product -> this.modelMapper.map(product, ProductResponse.class))
                 .orElseThrow(() -> new ResourceNotFoundException(Product.class.getName(), id));
     }
 
-    public ProductDto createProduct(ProductDto productDTO) {
-        Product product = this.modelMapper.map(productDTO, Product.class);
-        return modelMapper.map(productRepository.save(product), ProductDto.class);
+    public ProductResponse createProduct(ProductResponse productResponse) {
+        Product product = this.modelMapper.map(productResponse, Product.class);
+        return modelMapper.map(productRepository.save(product), ProductResponse.class);
     }
 
-    public ProductDto updateProduct(UUID id, ProductDto productDTO) {
+    public ProductResponse updateProduct(UUID id, ProductResponse productResponse) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
-                    Product product = this.modelMapper.map(productDTO, Product.class);
+                    Product product = this.modelMapper.map(productResponse, Product.class);
                     product.setId(existingProduct.getId());
-                    return this.modelMapper.map(productRepository.save(product), ProductDto.class);
+                    return this.modelMapper.map(productRepository.save(product), ProductResponse.class);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(Product.class.getName(), id));
     }
