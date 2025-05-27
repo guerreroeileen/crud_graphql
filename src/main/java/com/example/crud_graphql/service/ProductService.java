@@ -1,6 +1,7 @@
 package com.example.crud_graphql.service;
 
 
+import com.example.crud_graphql.resolver.input.ProductInput;
 import com.example.crud_graphql.resolver.response.ProductResponse;
 import com.example.crud_graphql.exceptions.ResourceNotFoundException;
 import com.example.crud_graphql.model.Product;
@@ -38,15 +39,15 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(Product.class.getName(), id));
     }
 
-    public ProductResponse createProduct(ProductResponse productResponse) {
-        Product product = this.modelMapper.map(productResponse, Product.class);
+    public ProductResponse createProduct(ProductInput productInput) {
+        Product product = this.modelMapper.map(productInput, Product.class);
         return modelMapper.map(productRepository.save(product), ProductResponse.class);
     }
 
-    public ProductResponse updateProduct(UUID id, ProductResponse productResponse) {
+    public ProductResponse updateProduct(UUID id, ProductInput productInput) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
-                    Product product = this.modelMapper.map(productResponse, Product.class);
+                    Product product = this.modelMapper.map( productInput, Product.class);
                     product.setId(existingProduct.getId());
                     return this.modelMapper.map(productRepository.save(product), ProductResponse.class);
                 })

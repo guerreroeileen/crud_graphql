@@ -1,0 +1,30 @@
+extend type Query {
+    categories(name: String, page: Int = 0, size: Int = 10): CategoryPageResponse
+    categoryById(id: ID!): CategoryResponse
+    findAllCategories(page: Int = 0, size: Int = 10): CategoryPageResponse
+}
+
+extend type Mutation {
+    createCategory(input: CategoryInput!): CategoryResponse
+    updateCategory(id: ID!, input: CategoryInput!): CategoryResponse
+    deleteCategory(id: ID!): Boolean
+}
+
+input CategoryInput {
+    name: String!
+}
+
+type CategoryResponse {
+    id: ID!
+    name: String!
+}
+
+type CategoryPageResponse {
+    content: [CategoryResponse]
+    totalElements: Int!
+    totalPages: Int!
+    number: Int!
+    size: Int!
+    first: Boolean!
+    last: Boolean!
+}

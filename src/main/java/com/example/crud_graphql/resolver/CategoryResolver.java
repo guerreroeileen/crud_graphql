@@ -1,16 +1,15 @@
 package com.example.crud_graphql.resolver;
 
 import com.example.crud_graphql.resolver.input.CategoryInput;
+import com.example.crud_graphql.resolver.response.CategoryPageResponse;
 import com.example.crud_graphql.resolver.response.CategoryResponse;
 import com.example.crud_graphql.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -21,18 +20,36 @@ public class CategoryResolver {
 
 
     @QueryMapping
-    public List<CategoryResponse> categories(@Argument String name,@Argument Integer page,@Argument Integer size) {
-        return categoryService.getAllCategories(name, page, size);
+    public CategoryPageResponse categories(@Argument String name, @Argument Integer page, @Argument Integer size) {
+        var result = categoryService.getAllCategories(name, page, size);
+        return new CategoryPageResponse(
+                result.getContent(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.getNumber(),
+                result.getSize(),
+                result.isFirst(),
+                result.isLast()
+        );
     }
 
     @QueryMapping
-    public CategoryResponse category(@Argument UUID id) {
+    public CategoryPageResponse findAllCategories(@Argument Integer page, @Argument Integer size) {
+        var result = categoryService.findAll(page, size);
+        return new CategoryPageResponse(
+                result.getContent(),
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.getNumber(),
+                result.getSize(),
+                result.isFirst(),
+                result.isLast()
+        );
+    }
+
+    @QueryMapping
+    public CategoryResponse categoryById(@Argument UUID id) {
         return categoryService.getCategoryById(id);
-    }
-
-    @QueryMapping
-    public List<CategoryResponse> findAllCategories(@Argument Integer page, @Argument Integer size) {
-        return categoryService.findAll(page, size).getContent();
     }
 
     @MutationMapping
@@ -41,7 +58,7 @@ public class CategoryResolver {
     }
 
     @MutationMapping
-    public CategoryResponse updateCategory(UUID id, CategoryInput input) {
+    public CategoryResponse updateCategory(@Argument UUID id, @Argument CategoryInput input) {
         return categoryService.updateCategory(id, input);
     }
 

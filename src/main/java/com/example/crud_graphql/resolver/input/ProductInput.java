@@ -1,21 +1,22 @@
-package com.example.crud_graphql.resolver.response;
+package com.example.crud_graphql.resolver.input;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
 @AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-public class ProductResponse {
-    private UUID id;
+public class ProductInput {
     private String name;
     private String description;
     private BigDecimal price;
     private Integer stock;
     private Boolean active;
-    private CategoryResponse category;
+    private UUID categoryId;
 }

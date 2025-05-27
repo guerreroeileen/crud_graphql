@@ -10,12 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +21,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
-    public List<CategoryResponse> getAllCategories(String name, Integer page, Integer size) {
-        System.out.println("aqui llegue");
+    public Page<CategoryResponse> getAllCategories(String name, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categoryPage;
         if (name != null && !name.isEmpty()) {
@@ -33,14 +29,13 @@ public class CategoryService {
         } else {
             categoryPage = categoryRepository.findAll(pageable);
         }
-        return categoryPage.stream()
-                .map(this::apply)
-                .collect(Collectors.toList());
+        return categoryPage
+                .map(this::apply);
     }
 
     public Page<CategoryResponse> findAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return categoryRepository.findAll(pageable).map((element) -> modelMapper.map(element, CategoryResponse.class));
+        Pageable pageable = PageRequest.of(page != null ? page : 0, size != null ? size : 10);
+        return categoryRepository.findAll(pageable).map(this::apply);
     }
 
     public CategoryResponse getCategoryById(UUID id) {

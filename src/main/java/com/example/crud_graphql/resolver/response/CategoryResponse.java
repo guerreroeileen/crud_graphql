@@ -1,6 +1,16 @@
 package com.example.crud_graphql.resolver.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
-public record CategoryResponse(UUID id, String name) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CategoryResponse {
+    private UUID id;
+    private String name;
 }

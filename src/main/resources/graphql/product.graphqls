@@ -1,0 +1,39 @@
+extend type Query {
+    products(productName: String, categoryId: ID, sortDirection: String, page: Int = 0, size: Int = 10): ProductPage
+    productById(id: ID!): ProductResponse
+}
+
+extend type Mutation {
+    createProduct(input: ProductInput!): ProductResponse
+    updateProduct(id: ID!, input: ProductInput!): ProductResponse
+    deleteProduct(id: ID!): Boolean
+}
+
+input ProductInput {
+    name: String!
+    description: String!
+    price: Float!
+    stock: Int!
+    active: Boolean!
+    categoryId: ID!
+}
+
+type ProductResponse {
+    id: ID!
+    name: String!
+    description: String!
+    price: Float!
+    stock: Int!
+    active: Boolean!
+    category: CategoryResponse!
+}
+
+type ProductPage {
+    content: [ProductResponse!]!
+    totalElements: Int!
+    totalPages: Int!
+    pageNumber: Int!
+    pageSize: Int!
+    first: Boolean!
+    last: Boolean!
+}
