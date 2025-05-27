@@ -8,11 +8,12 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
 @RequiredArgsConstructor
 public class CategoryResolver {
 
@@ -27,6 +28,11 @@ public class CategoryResolver {
     @QueryMapping
     public CategoryResponse category(@Argument UUID id) {
         return categoryService.getCategoryById(id);
+    }
+
+    @QueryMapping
+    public List<CategoryResponse> findAllCategories(@Argument Integer page, @Argument Integer size) {
+        return categoryService.findAll(page, size).getContent();
     }
 
     @MutationMapping

@@ -1,6 +1,7 @@
 type Query {
     categories(name: String, page: Int, size: Int): [CategoryResponse]
     category(id: ID!): CategoryResponse
+    findAllCategories(page: Int = 0, size: Int = 10): [CategoryResponse]
 }
 
 type Mutation {

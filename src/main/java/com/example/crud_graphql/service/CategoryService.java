@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +36,11 @@ public class CategoryService {
         return categoryPage.stream()
                 .map(this::apply)
                 .collect(Collectors.toList());
+    }
+
+    public Page<CategoryResponse> findAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryRepository.findAll(pageable).map((element) -> modelMapper.map(element, CategoryResponse.class));
     }
 
     public CategoryResponse getCategoryById(UUID id) {
