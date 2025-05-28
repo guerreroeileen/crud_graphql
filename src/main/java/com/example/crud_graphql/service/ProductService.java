@@ -25,7 +25,7 @@ public class ProductService {
 
     public Page<ProductResponse> getAllProducts(Integer page, Integer size, String productName, UUID categoryId, String sortDirection) {
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
-        Sort sort = Sort.by(direction, "price");
+        Sort sort = Sort.by(direction);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Product> productsPage = productRepository.findByNameAndCategoryId(productName, categoryId, pageable);
