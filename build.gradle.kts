@@ -29,6 +29,8 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.modelmapper:modelmapper:3.2.1")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation ("org.springframework.boot:spring-boot-starter-actuator")
+	implementation ("io.micrometer:micrometer-registry-prometheus")
 
 
 	compileOnly("org.projectlombok:lombok")
@@ -39,6 +41,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework:spring-webflux")
 	testImplementation("org.springframework.graphql:spring-graphql-test")
+	testImplementation ("com.h2database:h2")
 }
 
 tasks.withType<Test> {
